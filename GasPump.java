@@ -2,10 +2,10 @@ package com.company;
 
 public class GasPump {
     public String typeOFgas;
-    public Integer amountOFgallons;
-    public Integer amountOFmoney;
+    public double amountOFgallons;
+    public double amountOFmoney;
 
-    GasPump(String typeOFgas, Integer amountOFgallons, Integer amountOFmoney) {
+    GasPump(String typeOFgas, double amountOFgallons, double amountOFmoney) {
         this.typeOFgas = typeOFgas;
         this.amountOFgallons = amountOFgallons;
         this.amountOFmoney = amountOFmoney;

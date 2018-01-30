@@ -1,0 +1,3 @@
+Type, Gallons, Price
+Regular, 26.79, 56.0
+Premium, 34.0, $77.86
