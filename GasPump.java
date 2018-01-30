@@ -3,33 +3,33 @@ package com.company;
 public class GasPump {
     public String typeOFgas;
     public Integer amountOFgallons;
-    public Integer priceOFgas;
+    public Integer amountOFmoney;
 
-    GasPump(String gasType, Integer gallonAmount, Integer gasPrice) {
-        typeOFgas = gasType;
-        amountOFgallons = gallonAmount;
-        priceOFgas = gasPrice;
+    GasPump(String typeOFgas, Integer amountOFgallons, Integer amountOFmoney) {
+        this.typeOFgas = typeOFgas;
+        this.amountOFgallons = amountOFgallons;
+        this.amountOFmoney = amountOFmoney;
     }
 
-    public double prepay(double money) {
+    public double prepay() {
         double gallons = 0.0;
         if (typeOFgas.equals("Regular")) {
-            return money / 2.09;
+            return Math.round(amountOFmoney / 2.09 * 100.00) / 100.00;
         } else if (typeOFgas.equals("Mid-Grade")) {
-            return money / 2.19;
+            return Math.round(amountOFmoney / 2.19 * 100.00) / 100.00;
         } else if (typeOFgas.equals("Premium")) {
-            return money / 2.29;
+            return Math.round(amountOFmoney / 2.29 * 100.00) / 100.00;
         } return gallons;
     }
 
-    public double payafter(double gallons) {
+    public double payafter() {
         double money = 0.0;
         if (typeOFgas.equals("Regular")) {
-            return gallons * 2.09;
+            return Math.round(amountOFgallons * 2.09 * 100.00) / 100.00;
         } else if (typeOFgas.equals("Mid-Grade")) {
-            return gallons * 2.19;
+            return Math.round(amountOFgallons * 2.19 * 100.00) / 100.00;
         } else if (typeOFgas.equals("Premium")) {
-            return gallons * 2.29;
+            return Math.round(amountOFgallons * 2.29 * 100.00) / 100.00;
         } return money;
     }
 
