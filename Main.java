@@ -48,12 +48,12 @@ public class Main {
 
     }
 
-
     public static void saveInventoryInFile(ArrayList<GasPump> inventory) throws IOException {
         FileWriter writer = new FileWriter("/home/treyshel/IdeaProjects/Gas-Pump-Program/src/com/company/inventory.txt");
-        writer.write(inventory.get(0).typeOFgas + "," + inventory.get(0).amountOFgallons + "," +  inventory.get(0).amountOFmoney );
-        writer.write(inventory.get(1).typeOFgas + "," + inventory.get(1).amountOFgallons + "," + inventory.get(1).amountOFmoney);
-        writer.write(inventory.get(2).typeOFgas + "," + inventory.get(2).amountOFgallons + "," + inventory.get(2).amountOFmoney);
+        writer.write(inventory.get(0).typeOFgas + ", " + inventory.get(0).amountOFgallons + ", " +  inventory.get(0).amountOFmoney + "\n" );
+        writer.write(inventory.get(1).typeOFgas + ", " + inventory.get(1).amountOFgallons + ", " + inventory.get(1).amountOFmoney + "\n");
+        writer.write(inventory.get(2).typeOFgas + ", " + inventory.get(2).amountOFgallons + ", " + inventory.get(2).amountOFmoney);
+        writer.close();
     }
 
     //this helps write each transaction into the transactions.txt file
@@ -69,9 +69,7 @@ public class Main {
         Scanner gastypeInput = new Scanner(System.in);
         System.out.println("\t\tWelcome to Trey's Place!\nWhat type of gas?\n87 -> Regular ($2.09)\n89 -> Mid-Grade ($2.19)\n92 -> Premium ($2.29)\n");
         gastype = getType(gastypeInput.next());
-
-        loadInventoryInFile();
-
+        
         //this is figuring out whether the user is paying before or after
         String payBeforeOrAfter;
         Scanner beforeOrAfterInput = new Scanner(System.in);
@@ -83,10 +81,25 @@ public class Main {
             double total;
             Scanner cashInput = new Scanner(System.in);
             System.out.print("Money amount?\n$");
-            total = Integer.parseInt(cashInput.next());
+            total = Math.round(Integer.parseInt(cashInput.next()) * 100.00) / 100.00;
 
             GasPump printGallons = new GasPump(gastype, 0, total);
-            double total_gallons = printGallons.prepay();
+
+            double total_gallons = Math.round(printGallons.prepay() * 100.00) / 100.00;
+
+            ArrayList<GasPump> inventory = loadInventoryInFile();
+
+            if (gastype.equals("Regular")){
+                inventory.get(0).amountOFmoney += total;
+                inventory.get(0).amountOFgallons -= total_gallons;
+            } else if (gastype.equals("Mid-Grade")) {
+                inventory.get(1).amountOFmoney += total;
+                inventory.get(1).amountOFgallons -= total_gallons;
+            } else if (gastype.equals("Premium")) {
+                inventory.get(2).amountOFmoney += total;
+                inventory.get(2).amountOFgallons -= total_gallons;
+            }
+
 
             System.out.println("********************************");
             System.out.println("Type of gas: " + gastype);
@@ -97,26 +110,44 @@ public class Main {
             //this is the function call to write to the file once the transaction is finished
             appendDataToFile(gastype, total_gallons, total);
 
+            saveInventoryInFile(inventory);
+
         } //if ther user chooses to pay after, they must pump the gas and however many gallons they
         //received, the payment is then shown in the end
         else if (payBeforeOrAfter.equals("2")) {
             double total;
             Scanner gallonInput = new Scanner(System.in);
             System.out.println("How many gallons?\n");
-            double total_gallons = Double.parseDouble(gallonInput.next());
+            double total_gallons = Math.round(Double.parseDouble(gallonInput.next()) * 100.00) / 100.00;
 
             GasPump printCost = new GasPump(gastype, total_gallons, 0);
-            double total_price = printCost.payafter();
+            double total_price = Math.round(printCost.payafter() * 100.00) / 100.00;
+
+            ArrayList<GasPump> inventory = loadInventoryInFile();
+
+            if (gastype.equals("Regular")){
+                inventory.get(0).amountOFmoney += total_price;
+                inventory.get(0).amountOFgallons -= total_gallons;
+            } else if (gastype.equals("Mid-Grade")) {
+                inventory.get(1).amountOFmoney += total_price;
+                inventory.get(1).amountOFgallons -= total_gallons;
+            } else if (gastype.equals("Premium")) {
+                inventory.get(2).amountOFmoney += total_price;
+                inventory.get(2).amountOFgallons -= total_gallons;
+            }
+
 
             //prints receipt
             System.out.println("********************************");
             System.out.println("Type of gas: " + gastype);
-            System.out.println("Amount pumped: " + total_gallons);
             System.out.println("Total cost: $" + total_price);
+            System.out.println("Amount pumped: " + total_gallons);
             System.out.println("********************************");
 
             //this is the function call to write to the file once the transaction is finished
             appendDataToFile(gastype, total_gallons, total_price);
+
+            saveInventoryInFile(inventory);
 
         }
     }
