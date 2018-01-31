@@ -20,7 +20,7 @@ public class Main {
         } return type;
     }
 
-    public static void loadInventoryInFile() throws IOException {
+    public static ArrayList<GasPump> loadInventoryInFile() throws IOException {
         BufferedReader br = null;
         FileReader fr = null;
 
@@ -28,16 +28,32 @@ public class Main {
         fr = new FileReader("/home/treyshel/IdeaProjects/Gas-Pump-Program/src/com/company/inventory.txt");
         br = new BufferedReader(fr);
 
-        String CurrentLine;
-        while ((CurrentLine = br.readLine()) != null) {
-            String[] splitOut = CurrentLine.split(", ");
-            System.out.println(splitOut[1]);
-        }
+
+        String CurrentLine = "";
+        String[] reglist = br.readLine().toString().split(", ");
+        String[] midlist = br.readLine().toString().split(", ");
+        String[] premlist = br.readLine().toString().split(", ");
+
+        GasPump regular =  new GasPump(reglist[0], Double.parseDouble(reglist[1]), Double.parseDouble(reglist[2]));
+        GasPump midgrade = new GasPump(midlist[0], Double.parseDouble(midlist[1]), Double.parseDouble(midlist[2]));
+        GasPump premium = new GasPump(premlist[0], Double.parseDouble(premlist[1]), Double.parseDouble(premlist[2]));
+
+        return new ArrayList<GasPump>() {
+            {
+            add(regular);
+            add(midgrade);
+            add(premium);
+            }
+        };
+
     }
 
 
-    public static void saveInventoryInFile() {
-        
+    public static void saveInventoryInFile(ArrayList<GasPump> inventory) throws IOException {
+        FileWriter writer = new FileWriter("/home/treyshel/IdeaProjects/Gas-Pump-Program/src/com/company/inventory.txt");
+        writer.write(inventory.get(0).typeOFgas + "," + inventory.get(0).amountOFgallons + "," +  inventory.get(0).amountOFmoney );
+        writer.write(inventory.get(1).typeOFgas + "," + inventory.get(1).amountOFgallons + "," + inventory.get(1).amountOFmoney);
+        writer.write(inventory.get(2).typeOFgas + "," + inventory.get(2).amountOFgallons + "," + inventory.get(2).amountOFmoney);
     }
 
     //this helps write each transaction into the transactions.txt file
