@@ -22,6 +22,8 @@ public class Main {
         } return type;
     }
 
+    //this loads the inventory.txt as an array
+
     public static ArrayList<GasPump> loadInventoryInFile() throws IOException {
         BufferedReader br = null;
         FileReader fr = null;
@@ -50,22 +52,29 @@ public class Main {
 
     }
 
+    /* this now saves the file to where the ArrayList is:
+    index 0 = type of gas, index 1 = amount of gallons,
+    index 2 = total income for that specific gas type
+     */
+
     public static void saveInventoryInFile(ArrayList<GasPump> inventory) throws IOException {
         FileWriter writer = new FileWriter("/home/treyshel/IdeaProjects/Gas-Pump-Program/src/com/company/inventory.txt");
         writer.write(inventory.get(0).typeOFgas + ", " + inventory.get(0).amountOFgallons + ", " +  inventory.get(0).amountOFmoney + "\n" );
         writer.write(inventory.get(1).typeOFgas + ", " + inventory.get(1).amountOFgallons + ", " + inventory.get(1).amountOFmoney + "\n");
         writer.write(inventory.get(2).typeOFgas + ", " + inventory.get(2).amountOFgallons + ", " + inventory.get(2).amountOFmoney);
         writer.close();
-        System.out.print("Successfully refilled");
     }
 
-    //this helps write each transaction into the transactions.txt file
+    //this helps append each transaction into the transactions.txt file
+
     public static void appendDataToFile(String gastype, double printGallons, double printCost) throws IOException {
         FileWriter writer = new FileWriter("/home/treyshel/IdeaProjects/Gas-Pump-Program/src/com/company/transactions.txt",true);
             //once the file is opened and written into, it has to be closed also
             writer.write("\n" + gastype + ", " + printGallons + ", " + printCost);
             writer.close();
         }
+
+
     public static void main(String[] args) throws IOException {
         //gets the gas type input
         String gastype;
@@ -73,11 +82,16 @@ public class Main {
         System.out.println("\t\tWelcome to Trey's Place!\nWhat type of gas?\n87 -> Regular ($2.09)\n89 -> Mid-Grade ($2.19)\n92 -> Premium ($2.29)\n");
         gastype = getType(gastypeInput.next());
 
+        /* if the administrator knows the secret code ("Administrator123"),
+        the secret admin options will show
+        ELSE:
+        the user interaction will resume as normal
+         */
 
         if (gastype.equals("Administrator123")) {
             String admin_choice;
             Scanner admin_input = new Scanner(System.in);
-            System.out.println("1 - View Transactions\n2 - View Gas Tank Levels\n3 - Store Income\n4 - Refill Gas Tank\n5 - Quit Program");
+            System.out.println("1 - View Transactions\n2 - View Gas Tank\n3 - Store Income\n4 - Refill Gas Tank\n5 - Quit Program");
             admin_choice = admin_input.next();
 
             if (admin_choice.equals("1")) {
@@ -101,13 +115,20 @@ public class Main {
             if (payBeforeOrAfter.equals("1")) {
                 double total;
                 Scanner cashInput = new Scanner(System.in);
+
+                //user inputs how much money they'd like to spend on gas
                 System.out.print("Money amount?\n$");
                 total = Math.round(Integer.parseInt(cashInput.next()) * 100.00) / 100.00;
 
                 GasPump printGallons = new GasPump(gastype, 0, total);
 
+                /* Math.round(blah * 100.00) / 100.00 keeps the
+                gallons from going over two decimal places */
                 double total_gallons = Math.round(printGallons.prepay() * 100.00) / 100.00;
 
+                /* Since Java makes you declare the type, my inventory is
+                in an ArrayList; the money is also getting added to my file
+                 while my gallons are being taken away from the store's tank */
                 ArrayList<GasPump> inventory = loadInventoryInFile();
                 if (gastype.equals("Regular")) {
                     inventory.get(0).amountOFmoney += total;
@@ -130,10 +151,13 @@ public class Main {
                 //this is the function call to write to the file once the transaction is finished
                 appendDataToFile(gastype, total_gallons, total);
 
+                /* this makes the new store income and store's
+                gas in the tanks update */
                 saveInventoryInFile(inventory);
 
-            } //if ther user chooses to pay after, they must pump the gas and however many gallons they
-            //received, the payment is then shown in the end
+            } /* if the user chooses to pay after, they must pump
+            the gas and however many gallons they received, the
+            payment is then shown in the end */
             else if (payBeforeOrAfter.equals("2")) {
                 double total;
                 Scanner gallonInput = new Scanner(System.in);
